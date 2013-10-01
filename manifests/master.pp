@@ -84,6 +84,8 @@ class puppet::master (
   $package_provider           = undef,
   $puppet_master_service      = $::puppet::params::puppet_master_service,
   $puppet_central_ca          = undef,
+  $puppetdb_terminus_package  = $::puppet::params::puppetdb_terminus_package,
+  $puppetdb_terminus_version  = $::puppet::params::puppetdb_terminus_version,
   $proxy_allow_from           = [],
   $puppet_extra_configs       = {},
   $version                    = 'present'
@@ -102,10 +104,12 @@ class puppet::master (
 
     if $storeconfigs_dbadapter == "puppetdb" {
       class { 'puppet::storeconfigs':
-        dbadapter         => 'puppetdb',
-        dbserver          => $storeconfigs_dbserver,
-        dbport            => $storeconfigs_dbport,
-        package_provider  => $package_provider,
+        dbadapter                 => 'puppetdb',
+        dbserver                  => $storeconfigs_dbserver,
+        dbport                    => $storeconfigs_dbport,
+        package_provider          => $package_provider,
+        puppetdb_terminus_package => $puppetdb_terminus_package,
+        puppetdb_terminus_version => $puppetdb_terminus_version
       }
     } else {
       class { 'puppet::storeconfigs':

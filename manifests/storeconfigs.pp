@@ -11,13 +11,16 @@
 # Sample Usage:
 #
 class puppet::storeconfigs (
-  $dbadapter        = $puppet::params::storeconfigs_dbadapter,
-  $dbuser           = $puppet::params::storeconfigs_dbuser,
-  $dbpassword       = $puppet::params::storeconfigs_dbpassword,
-  $dbserver         = $puppet::params::storeconfigs_dbserver,
-  $dbsocket         = $puppet::params::storeconfigs_dbsocket,
-  $dbport           = undef,
-  $package_provider = undef
+  $dbadapter                 = $puppet::params::storeconfigs_dbadapter,
+  $dbuser                    = $puppet::params::storeconfigs_dbuser,
+  $dbpassword                = $puppet::params::storeconfigs_dbpassword,
+  $dbserver                  = $puppet::params::storeconfigs_dbserver,
+  $dbsocket                  = $puppet::params::storeconfigs_dbsocket,
+  $dbport                    = undef,
+  $package_provider          = undef,
+  $puppetdb_terminus_package = $puppet::params::puppetdb_terminus_package,
+  $puppetdb_terminus_version = $puppet::params::puppetdb_terminus_version,
+
 ) {
 
   package { $puppet::params::activerecord_package:
@@ -37,9 +40,11 @@ class puppet::storeconfigs (
     }
     'puppetdb': {
       class { 'puppet::storeconfigs::puppetdb':
-        dbserver          => $dbserver,
-        dbport            => $dbport,
-        package_provider  => $package_provider,
+        dbserver                  => $dbserver,
+        dbport                    => $dbport,
+        package_provider          => $package_provider,
+        puppetdb_terminus_package => $puppetdb_terminus_package,
+        puppetdb_terminus_version => $puppetdb_terminus_version
       }
     }
     default: { err("target dbadapter $dbadapter not implemented") }
