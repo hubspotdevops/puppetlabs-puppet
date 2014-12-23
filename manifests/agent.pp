@@ -13,6 +13,7 @@
 class puppet::agent(
   $puppet_server,
   $puppet_defaults = $::puppet::params::puppet_defaults,
+  $puppet_agent_cron = $::puppet::params::puppet_agent_cron,
   $puppet_agent_service = $::puppet::params::puppet_agent_service,
   $puppet_agent_name = $::puppet::params::puppet_agent_name,
   $puppet_conf = $::puppet::params::puppet_conf,
@@ -48,15 +49,40 @@ class puppet::agent(
       subscribe => Package[$puppet_agent_name],
     }
   } else {
-    $service_notify = Service[$puppet_agent_service]
+      $service_notify = Service[$puppet_agent_service]
+    if $puppet_agent_cron == true {
 
-    service { $puppet_agent_service:
-      ensure    => running,
-      enable    => true,
-      hasstatus => true,
-      require   => File['/etc/puppet/puppet.conf'],
-      subscribe => Package[$puppet_agent_name],
-      #before    => Service['httpd'];
+      $first  = fqdn_rand(30)
+      $second = $first + 30
+
+      cron { 'puppet-agent':
+        ensure  => 'present',
+        command => '/usr/bin/puppet agent -t &> /dev/null',
+        user    => 'root',
+        minute  => [$first, $second]
+      }
+
+      service { $puppet_agent_service:
+        ensure  => stopped,
+        enable  => false,
+        require => Cron['puppet-agent']
+      }
+
+    } else {
+      service { $puppet_agent_service:
+        ensure    => running,
+        enable    => true,
+        hasstatus => true,
+        require   => File['/etc/puppet/puppet.conf'],
+        subscribe => Package[$puppet_agent_name],
+        #before    => Service['httpd'];
+      }
+
+      cron { 'puppet-agent':
+        ensure  => 'absent',
+        require => Service[$puppet_agent_service]
+      }
+
     }
   }
 

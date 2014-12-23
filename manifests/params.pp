@@ -31,6 +31,8 @@ class puppet::params {
   $puppetdb_terminus_package        = 'puppetdb-terminus'
   $puppetdb_terminus_version        = 'installed'
 
+  $puppet_agent_cron                = false
+
   case $::operatingsystem {
     'centos', 'redhat', 'fedora', 'scientific': {
       $puppet_master_package        = 'puppet'
