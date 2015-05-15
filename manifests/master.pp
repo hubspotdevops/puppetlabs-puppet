@@ -168,7 +168,7 @@ class puppet::master (
       ssl_chain       => "${puppet::params::puppet_ssldir}/ca/ca_crt.pem",
       ssl_ca          => "${puppet::params::puppet_ssldir}/ca/ca_crt.pem",
       ssl_crl         => "${puppet::params::puppet_ssldir}/ca/ca_crl.pem",
-      sslproxyengine  => true,
+      ssl_proxyengine => true,
     # template        => 'puppet/apache2.conf.erb',
       custom_fragment => template('puppet/apache2.conf.erb'),
       require         => [ File['/etc/puppet/rack/config.ru'], File['/etc/puppet/puppet.conf'] ],
