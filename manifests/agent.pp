@@ -87,7 +87,7 @@ class puppet::agent(
   }
 
   if defined(File['/etc/puppet']) {
-    File ['/etc/puppet'] {
+    File['/etc/puppet'] {
       require +> Package[$puppet_agent_name],
       notify  +> $service_notify
     }
