@@ -246,7 +246,7 @@ class puppet::master (
   }
 
   if defined(File['/etc/puppet']) {
-    File ['/etc/puppet'] {
+    File['/etc/puppet'] {
       require +> Package[$puppet_master_package],
       notify  +> $service_notify
     }
