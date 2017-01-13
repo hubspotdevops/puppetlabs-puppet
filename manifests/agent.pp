@@ -57,7 +57,7 @@ class puppet::agent(
 
       cron { 'puppet-agent':
         ensure  => 'present',
-        command => '/usr/bin/puppet agent -t &> /dev/null',
+        command => 'puppet agent --onetime --no-daemonize &> /dev/null',
         user    => 'root',
         minute  => [$first, $second]
       }
